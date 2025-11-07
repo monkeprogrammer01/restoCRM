@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const orderSchema = new mongoose.Schema(
     {
         tableId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Number,
             ref: "Table",
             required: true,
         },

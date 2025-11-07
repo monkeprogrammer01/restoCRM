@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const reservationSchema = new mongoose.Schema(
     {
         tableId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Number,
             ref: "Table",
             required: true
         },
@@ -31,6 +31,6 @@ const reservationSchema = new mongoose.Schema(
     {timestamps: true}
 )
 
-const Reservation = mongoose.model("Reservation", resrvationSchema)
+const Reservation = mongoose.model("Reservation", reservationSchema)
 
 export default Reservation
