@@ -1,10 +1,10 @@
-import MainImage from "../assets/homepagebg.jpg"
+import HomeImage from "../assets/homepagebg.jpg"
 
-export default function Home() {
+export default function Example() {
   return (
-    <div className="bg-gray-900">
+    <div className="bg-white">
       <div className="mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
-        <div className="relative isolate overflow-hidden bg-gray-800 px-6 pt-16 after:pointer-events-none after:absolute after:inset-0 after:inset-ring after:inset-ring-white/10 sm:rounded-3xl sm:px-16 after:sm:rounded-3xl md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
+        <div className="relative isolate overflow-hidden bg-gray-900 px-6 pt-16 shadow-2xl sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
           <svg
             viewBox="0 0 1024 1024"
             aria-hidden="true"
@@ -20,28 +20,29 @@ export default function Home() {
           </svg>
           <div className="mx-auto max-w-md text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
             <h2 className="text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl">
-              Начать ползоваться приложением.
+              Исследуйте наше приложение.
             </h2>
             <p className="mt-6 text-lg/8 text-pretty text-gray-300">
-              Возможность быстро забронировать столик, посмотреть меню, онлайн заказать еду и также копить бонусы
+            Возможность быстро забронировать столик, посмотреть меню, онлайн заказать еду и также копить бонусы
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
               <a
                 href="#"
-                className="rounded-md bg-gray-700 px-3.5 py-2.5 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-gray-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                Начать
+                {' '}
+                Начать{' '}
               </a>
               <a href="#" className="text-sm/6 font-semibold text-white hover:text-gray-100">
-                Узнать больше
-                <span aria-hidden="true">→</span>
+                Узнать больше 
+                <span aria-hidden="true"> →</span>
               </a>
             </div>
           </div>
           <div className="relative mt-16 h-80 lg:mt-8">
             <img
               alt="App screenshot"
-              src={MainImage}
+              src={HomeImage}
               width={1824}
               height={1080}
               className="absolute top-0 left-0 w-228 max-w-none rounded-md bg-white/5 ring-1 ring-white/10"
