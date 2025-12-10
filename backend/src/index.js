@@ -10,12 +10,16 @@ import { Server } from "socket.io"
 import http from "http"
 import { initSocket } from "./lib/socket.js"
 import cookieParser from "cookie-parser"
+import { swaggerDocs } from "../swagger.js"
 dotenv.config()
 connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+
+swaggerDocs(app);
+
 
 app.use("/api/orders", orderRoute)
 app.use("/api/reservations", reservationRoute)
