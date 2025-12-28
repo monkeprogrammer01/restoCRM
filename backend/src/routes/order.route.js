@@ -1,6 +1,6 @@
 import express from "express";
 import { createOrder, deleteOrderById, getOrderById, getOrders, updateOrderById } from "../controllers/order.controller.js";
-import { authMiddleware } from "../lib/utils.js";
+import { authMiddleware, roleMiddleware } from "../lib/utils.js";
 
 const router = express.Router();
 
@@ -63,7 +63,7 @@ router.get("/:id", getOrderById);
  *       201:
  *         description: Order created
  */
-router.post("/", authMiddleware, createOrder);
+router.post("/", authMiddleware, roleMiddleware(["staff", "client"]), createOrder);
 
 /**
  * @openapi
