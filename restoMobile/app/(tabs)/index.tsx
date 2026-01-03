@@ -85,7 +85,7 @@ function RestaurantHome() {
     ? dishes
     : dishes.filter(dish => dish.category === activeCategory);
 
-  const renderIcon = (iconLib, iconName, size, color) => {
+  const renderIcon = (iconLib: string, iconName: string, size: number, color: string) => {
     switch(iconLib) {
       case 'FontAwesome5':
         return <FontAwesome5 name={iconName} size={size} color={color} />;
