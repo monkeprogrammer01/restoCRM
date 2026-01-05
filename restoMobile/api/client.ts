@@ -1,6 +1,6 @@
 import axios from "axios"
 import { API_CONFIG } from "@/constants/api.constants"
-
+import { setupInterceptors } from "./interceptors"
 export const api = axios.create({
     baseURL: API_CONFIG.BASE_URL,
     timeout: API_CONFIG.TIMEOUT,
@@ -8,3 +8,5 @@ export const api = axios.create({
         "Content-Type": "application/json"
     }  
 })
+
+setupInterceptors(api);

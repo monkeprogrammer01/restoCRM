@@ -16,7 +16,7 @@ export const setupInterceptors = (client: AxiosInstance) => {
         (response) => response,
         async (error) => {
             if (error.response?.status === 401) {
-                AsyncStorage.removeItem('token');
+                await AsyncStorage.removeItem('token');
             }
             throw error;
         }

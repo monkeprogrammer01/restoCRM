@@ -14,57 +14,50 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'expo-router';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState(''); // ✅ исправлено название
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isLogin, setIsLogin] = useState(true); // true = login, false = register
-
-  // Дополнительные поля для регистрации
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  
+  const { login, register, loading } = useAuth(); // ✅ взяли loading из hook
+  const router = useRouter();
 
   const handleSubmit = async () => {
     // Валидация
-    if (!email || !password) {
+    if (!phoneNumber || !password) {
       Alert.alert('Ошибка', 'Заполните все поля');
       return;
     }
 
-    if (!isLogin && (!name || !phone)) {
+    if (!isLogin && !fullName) {
       Alert.alert('Ошибка', 'Заполните все поля');
       return;
     }
-
-    // Email валидация
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert('Ошибка', 'Некорректный email');
-      return;
-    }
-
-    setLoading(true);
 
     try {
-      // Здесь будет запрос к API
-      // const response = await userService.login(email, password);
-      // или
-      // const response = await userService.register(name, email, password, phone);
-      
-      // Имитация запроса
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      Alert.alert(
-        'Успешно',
-        isLogin ? 'Вы успешно вошли!' : 'Регистрация завершена!',
-        [{ text: 'OK', onPress: () => console.log('Navigate to home') }]
-      );
-    } catch (error) {
-      Alert.alert('Ошибка', 'Что-то пошло не так. Попробуйте снова.');
-    } finally {
-      setLoading(false);
+      if (isLogin) {
+        // Логин
+        await login(phoneNumber, password);
+        Alert.alert('Успешно', 'Вы успешно вошли!');
+        router.replace('/(tabs)'); // переход на главную
+      } else {
+        // Регистрация
+        await register({
+          fullName: fullName,
+          phoneNumber: phoneNumber,
+          password: password
+        });
+        Alert.alert('Успешно', 'Регистрация завершена!');
+        router.replace('/(tabs)'); // переход на главную
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Что-то пошло не так';
+      Alert.alert('Ошибка', message);
     }
   };
 
@@ -115,46 +108,27 @@ export default function Login() {
                 </View>
                 <TextInput
                   style={styles.input}
-                  placeholder="Имя"
+                  placeholder="Полное имя"
                   placeholderTextColor="#9CA3AF"
-                  value={name}
-                  onChangeText={setName}
+                  value={fullName} // ✅ исправлено
+                  onChangeText={setFullName} // ✅ исправлено
                   autoCapitalize="words"
                 />
               </View>
             )}
 
-            {/* Phone - только для регистрации */}
-            {!isLogin && (
-              <View style={styles.inputContainer}>
-                <View style={styles.inputIconContainer}>
-                  <Ionicons name="call-outline" size={20} color="#6B7280" />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder="+7 (777) 123-45-67"
-                  placeholderTextColor="#9CA3AF"
-                  value={phone}
-                  onChangeText={setPhone}
-                  keyboardType="phone-pad"
-                />
-              </View>
-            )}
-
-            {/* Email */}
+            {/* Phone Number */}
             <View style={styles.inputContainer}>
               <View style={styles.inputIconContainer}>
-                <Ionicons name="mail-outline" size={20} color="#6B7280" />
+                <Ionicons name="call-outline" size={20} color="#6B7280" />
               </View>
               <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder="+7 (777) 123-45-67"
                 placeholderTextColor="#9CA3AF"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
+                value={phoneNumber} // ✅ правильное имя
+                onChangeText={setPhoneNumber} // ✅
+                keyboardType="phone-pad"
               />
             </View>
 
@@ -253,7 +227,10 @@ export default function Login() {
           {/* Guest Mode */}
           <TouchableOpacity
             style={styles.guestButton}
-            onPress={() => Alert.alert('Гостевой режим', 'Продолжить без регистрации')}
+            onPress={() => {
+              Alert.alert('Гостевой режим', 'Продолжить без регистрации');
+              router.replace('/(tabs)');
+            }}
           >
             <Text style={styles.guestButtonText}>Продолжить как гость</Text>
           </TouchableOpacity>
