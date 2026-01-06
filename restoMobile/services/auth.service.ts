@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { LoginRequest, RegistrationRequest, AuthResponse } from "@/types/auth.types";
+import { LoginRequest, RegistrationRequest, AuthResponse, User } from "@/types/auth.types";
 
 class AuthService {
     async login(phoneNumber: string, password: string): Promise<AuthResponse> {
@@ -9,9 +9,10 @@ class AuthService {
         return response.data        
     }
 
-    async signup(fullName: string, phoneNumber: string, password: string): Promise<AuthResponse> {
+    async register(user: RegistrationRequest): Promise<AuthResponse> {
+        console.log("fejk", user)
         const response = await api.post('/auth/signup', {
-            fullName, phoneNumber, password
+            fullName: user.fullName, phoneNumber: user.phoneNumber, password: user.password
         })
         return response.data
     }
@@ -22,3 +23,5 @@ class AuthService {
     }
 
 }
+
+export const authService = new AuthService();

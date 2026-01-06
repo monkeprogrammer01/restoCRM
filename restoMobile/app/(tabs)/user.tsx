@@ -17,6 +17,7 @@ export default function UserProfile() {
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
   const handleLogout = () => {
+    console.log("logout")
     Alert.alert(
       'Выход',
       'Вы уверены, что хотите выйти?',
@@ -192,7 +193,7 @@ export default function UserProfile() {
           onPress={handleLogout}
         >
           <Ionicons name="log-out-outline" size={24} color="#EF4444" />
-          <Text style={styles.logoutText}>Выйти</Text>
+          <Text style={styles.logoutText} onPress={handleLogout}>Выйти</Text>
         </TouchableOpacity>
 
         <View style={styles.bottomSpace} />
