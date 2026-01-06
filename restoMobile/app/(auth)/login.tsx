@@ -45,7 +45,6 @@ export default function Login() {
         // Логин
         await login(phoneNumber, password);
         Alert.alert('Успешно', 'Вы успешно вошли!');
-        router.replace('/(tabs)'); // переход на главную
       } else {
         // Регистрация
         await register({
@@ -54,7 +53,6 @@ export default function Login() {
           password: password
         });
         Alert.alert('Успешно', 'Регистрация завершена!');
-        router.replace('/(tabs)'); // переход на главную
       }
     } catch (error: any) {
       const message = error.response?.data?.message || 'Что-то пошло не так';

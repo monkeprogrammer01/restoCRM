@@ -1,11 +1,12 @@
 import { api } from "@/api/client";
-import { LoginRequest, RegistrationRequest, AuthResponse, User } from "@/types/auth.types";
+import { RegistrationRequest, AuthResponse } from "@/types/auth.types";
 
 class AuthService {
     async login(phoneNumber: string, password: string): Promise<AuthResponse> {
         const response = await api.post('/auth/login', {
             phoneNumber, password
         })
+
         return response.data        
     }
 
@@ -14,6 +15,7 @@ class AuthService {
         const response = await api.post('/auth/signup', {
             fullName: user.fullName, phoneNumber: user.phoneNumber, password: user.password
         })
+
         return response.data
     }
 

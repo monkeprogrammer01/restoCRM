@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,20 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import { useUser } from '@/hooks/useUser';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'expo-router';
 
 export default function UserProfile() {
+  const {user, logout} = useAuth();
+  const {profile, fetchProfile} = useUser();
+  const router = useRouter
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [])
 
   const handleLogout = () => {
     console.log("logout")
@@ -98,9 +108,8 @@ export default function UserProfile() {
             </TouchableOpacity>
           </View>
           
-          <Text style={styles.userName}>Айдын Нуржанов</Text>
-          <Text style={styles.userEmail}>aidyn@example.com</Text>
-          <Text style={styles.userPhone}>+7 (777) 123-45-67</Text>
+          <Text style={styles.userName}>{user.fullName}</Text>
+          <Text style={styles.userPhone}>{user.phoneNumber}</Text>
 
           <View style={styles.membershipBadge}>
             <Ionicons name="diamond" size={16} color="#F59E0B" />

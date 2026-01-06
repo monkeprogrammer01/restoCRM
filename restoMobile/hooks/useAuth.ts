@@ -5,8 +5,31 @@ import { User, RegistrationRequest } from '../types/auth.types'
 
 
 export const useAuth = () => {
+
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [isInitialized, setIsInitialized] = useState(false);
+    const checkAuth = async () => {
+        try {
+
+          const token = await AsyncStorage.getItem('token');
+          const savedUser = await AsyncStorage.getItem('user');
+      
+          if (!token || !savedUser || savedUser === 'undefined') {
+            setUser(null);
+            return;
+          }
+      
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+        } catch (error) {
+          console.log('Ошибка проверки авторизации:', error);
+          setUser(null);
+        } finally {
+          setIsInitialized(true);
+        }
+      };
+      
 
     const login = async (phoneNumber: string, password: string) => {
         try {
@@ -47,6 +70,6 @@ export const useAuth = () => {
         }
     };
 
-    return { user, loading, login, register, logout }; 
+    return { user, loading, login, register, logout, checkAuth, isInitialized }; 
 
 }
