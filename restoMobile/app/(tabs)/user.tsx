@@ -16,17 +16,27 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'expo-router';
 
 export default function UserProfile() {
-  const {user, logout, fetchProfile, loading} = useAuth();
+  const {user, logout, fetchProfile, loading, checkAuth} = useAuth();
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
+  const [isLocalReady, setIsLocalReady] = useState(false);
+
   useEffect(() => {
-    if (user && user.id) {
+    const init = async () => {
+      await checkAuth(); 
+      setIsLocalReady(true);
+    };
+    init();
+  }, []);
+
+  useEffect(() => {
+    if (user && !loading) {
       fetchProfile();
     }
 
-  }, [user])
+  }, [isLocalReady])
   
   const handleLogout = async () => {
     console.log("logout")
@@ -47,11 +57,31 @@ export default function UserProfile() {
     );
   };
 
-  if (loading) {
+  if (!isLocalReady || loading) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#EA580C" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Ionicons name="person-circle-outline" size={100} color="#EA580C" />
+          <Text style={{ fontSize: 22, fontWeight: 'bold', marginTop: 16 }}>Вы вошли как гость</Text>
+          <Text style={{ textAlign: 'center', color: '#6B7280', marginTop: 8, marginBottom: 24 }}>
+            Войдите в аккаунт, чтобы просматривать свои заказы, копить баллы и получать персональные предложения.
+          </Text>
+          <TouchableOpacity 
+            style={[styles.promoButton, { width: '100%' }]} 
+            onPress={() => router.replace('/(auth)/login')}
+          >
+            <Text style={styles.promoButtonText}>Войти / Зарегистрироваться</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );

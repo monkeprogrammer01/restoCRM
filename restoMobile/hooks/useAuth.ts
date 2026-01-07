@@ -48,9 +48,10 @@ export const useAuth = () => {
         try {
             setLoading(true)
             const response = await authService.login(phoneNumber, password);
+            setUser(response.user)
+
             await AsyncStorage.setItem("token", response.token)
             await AsyncStorage.setItem("user", JSON.stringify(response.user))
-            setUser(response.user)
         } catch (error) {
             console.log(error)
             throw error
