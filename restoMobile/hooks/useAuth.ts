@@ -2,6 +2,7 @@ import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authService } from '../services/auth.service'
 import { User, RegistrationRequest } from '../types/auth.types'
+import { useRouter } from "expo-router";
 
 
 export const useAuth = () => {
@@ -9,6 +10,7 @@ export const useAuth = () => {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
+    const router = useRouter();
     const checkAuth = async () => {
         try {
 

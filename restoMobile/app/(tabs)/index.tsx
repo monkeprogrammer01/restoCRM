@@ -108,7 +108,7 @@ function RestaurantHome() {
           <View style={styles.headerContent}>
             <View style={styles.headerText}>
               <Text style={styles.welcomeText}>Добро пожаловать в</Text>
-              <Text style={styles.logoText}>Delicioso</Text>
+              <Text style={styles.logoText}>Nvision</Text>
             </View>
             <TouchableOpacity style={styles.profileButton}>
               <FontAwesome5 name="user-chef" size={20} color="#EA580C" />
