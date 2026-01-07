@@ -19,11 +19,6 @@ class AuthService {
         return response.data
     }
 
-    async me(): Promise<AuthResponse> {
-        const response = await api.get('/auth/me')
-        return response.data
-    }
-
 }
 
 export const authService = new AuthService();

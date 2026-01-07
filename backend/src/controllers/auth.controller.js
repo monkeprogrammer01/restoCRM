@@ -9,6 +9,11 @@ export const signup = async(req, res) => {
         if (password.length < 8) {
             return res.status(400).json({message: "Password must be at least 8 characters"})
         }
+        if (!fullName || !phoneNumber || !password) {
+            return res.status(400).json({
+                message: "All fields are required"
+            });
+        }
         const user = await User.findOne({phoneNumber})
 
         if (user) return res.status(400).json({message: "Phone number already exists"})
@@ -21,16 +26,19 @@ export const signup = async(req, res) => {
             phoneNumber: phoneNumber,
             password: hashedPassword
         })
-        if (newUser) {
-            generateToken(newUser._id, res);
-            await newUser.save();
-            res.status(201).json({
-                _id: newUser._id,
-                fullName: newUser.fullName
-            })
-        } else {
-            res.status(400).json({message: "Invalid user data"})
+        await newUser.save();
+        const token = generateToken(newUser._id, res);
+        const userWithoutPassword = {
+            id: newUser._id.toString(),
+            fullName: newUser.fullName,
+            phoneNumber: newUser.phoneNumber
         }
+        return res.status(201).json({
+            success: true,
+            user: userWithoutPassword,
+            token: token,
+            message: "User registered successfully"
+        })
 
     } catch (error) {
         console.log("Error in signup controller", error.message);
@@ -43,14 +51,24 @@ export const login = async(req, res) => {
         const {phoneNumber, password} = req.body;
         if (!phoneNumber || !password) return res.status(400).json({message: "Phone number and password are required"});
         const user = await User.findOne({phoneNumber}).select("+password");
+        if (!user) {
+            return res.status(401).json({
+                message: "Invalid credentials"
+            });
+        }
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) return res.status(401).json({message: "Invalid credentials"});
         const token = generateToken(user._id, res);
-        return res.status(201).json(
+        const userWithoutPassword = {
+            id: user._id.toString(),
+            fullName: user.fullName,
+            phoneNumber: user.phoneNumber
+        }
+        return res.status(200).json(
             {
                 success: true,
-                userId: user._id,
-                fullName: user.fullName,
+                user: userWithoutPassword,
+                token: token,
                 message: "Logged in successfully",
             }
         )
@@ -67,8 +85,12 @@ export const profile = async(req, res) => {
             return res.status(400).json({message: "User not found"})
         }
         return res.status(200).json({
-            fullName: user.fullName,
-            phoneNumber: user.phoneNumber
+            success: true,
+            user: {
+                id: user._id.toString(),
+                fullName: user.fullName,
+                phoneNumber: user.phoneNumber
+            }
         })
     } catch (error) {
         console.log("Ошибка getProfile:", error);

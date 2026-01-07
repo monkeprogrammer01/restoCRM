@@ -19,7 +19,6 @@ export const useAuth = () => {
             setUser(null);
             return;
           }
-      
           const parsedUser = JSON.parse(savedUser);
           setUser(parsedUser);
         } catch (error) {
@@ -69,7 +68,6 @@ export const useAuth = () => {
             console.log(error);
         }
     };
-
     return { user, loading, login, register, logout, checkAuth, isInitialized }; 
 
 }

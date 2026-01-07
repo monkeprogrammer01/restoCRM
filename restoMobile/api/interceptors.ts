@@ -8,6 +8,7 @@ export const setupInterceptors = (client: AxiosInstance) => {
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`
             }
+
             return config
         }
     )

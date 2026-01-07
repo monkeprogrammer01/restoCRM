@@ -35,7 +35,12 @@ export const verifyToken = (token) => {
 
 export const authMiddleware = (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
+        let token = null;
+        if (req.headers.authorization) {
+            token = req.headers.authorization.split(" ")[1]
+        } else {
+            token = req.cookies.jwt;
+        }
         if (!token) {
             return res.status(400).json({message: "Token Not Found"})
         }

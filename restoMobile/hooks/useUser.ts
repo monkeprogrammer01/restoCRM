@@ -10,7 +10,7 @@ export const useUser = () => {
         try {
             setLoading(true)
             const response = await userService.getProfile()
-            setProfile(response)
+            setProfile(response.user)
         } catch (error) {
             throw error
         } finally {

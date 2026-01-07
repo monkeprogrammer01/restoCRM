@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Alert,
   Switch,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
@@ -17,8 +18,8 @@ import { useRouter } from 'expo-router';
 
 export default function UserProfile() {
   const {user, logout} = useAuth();
-  const {profile, fetchProfile} = useUser();
-  const router = useRouter
+  const {profile, loading, fetchProfile} = useUser();
+  const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
@@ -26,17 +27,36 @@ export default function UserProfile() {
     fetchProfile();
   }, [])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("logout")
     Alert.alert(
       'Выход',
       'Вы уверены, что хотите выйти?',
       [
         { text: 'Отмена', style: 'cancel' },
-        { text: 'Выйти', style: 'destructive', onPress: () => console.log('Logout') }
+        { text: 'Выйти', style: 'destructive', onPress: async () => {
+          try {
+            await logout();
+            router.replace("/(auth)/login")
+          } catch (error) {
+            console.log("logout error:", error)
+          }
+        } }
       ]
     );
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#EA580C" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const displayUser = profile || user
 
   const menuSections = [
     {
@@ -108,8 +128,8 @@ export default function UserProfile() {
             </TouchableOpacity>
           </View>
           
-          <Text style={styles.userName}>{user.fullName}</Text>
-          <Text style={styles.userPhone}>{user.phoneNumber}</Text>
+          <Text style={styles.userName}>{displayUser?.fullName || "Name"}</Text>
+          <Text style={styles.userPhone}>{displayUser?.phoneNumber || "Phone number"}</Text>
 
           <View style={styles.membershipBadge}>
             <Ionicons name="diamond" size={16} color="#F59E0B" />
@@ -202,7 +222,7 @@ export default function UserProfile() {
           onPress={handleLogout}
         >
           <Ionicons name="log-out-outline" size={24} color="#EF4444" />
-          <Text style={styles.logoutText} onPress={handleLogout}>Выйти</Text>
+          <Text style={styles.logoutText}>Выйти</Text>
         </TouchableOpacity>
 
         <View style={styles.bottomSpace} />
