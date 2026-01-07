@@ -17,8 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'expo-router';
 
 export default function UserProfile() {
-  const {user, logout} = useAuth();
-  const {profile, loading, fetchProfile} = useUser();
+  const {user, logout, fetchProfile, loading} = useAuth();
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
@@ -56,7 +55,7 @@ export default function UserProfile() {
     );
   }
 
-  const displayUser = profile || user
+  const displayUser = user
 
   const menuSections = [
     {

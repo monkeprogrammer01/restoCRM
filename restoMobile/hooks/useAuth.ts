@@ -3,14 +3,26 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authService } from '../services/auth.service'
 import { User, RegistrationRequest } from '../types/auth.types'
 import { useRouter } from "expo-router";
-
+import { userService } from "@/services/user.service";
 
 export const useAuth = () => {
 
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
-    const router = useRouter();
+
+    const fetchProfile = async () => {
+        try {
+            setLoading(true)
+            const response = await userService.getProfile()
+            setUser(response.user)
+        } catch (error) {
+            throw error
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const checkAuth = async () => {
         try {
 
@@ -70,6 +82,6 @@ export const useAuth = () => {
             console.log(error);
         }
     };
-    return { user, loading, login, register, logout, checkAuth, isInitialized }; 
+    return { user, loading, login, register, logout, checkAuth, isInitialized, fetchProfile }; 
 
 }
