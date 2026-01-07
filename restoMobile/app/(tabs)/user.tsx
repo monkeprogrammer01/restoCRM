@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
-import { useUser } from '@/hooks/useUser';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'expo-router';
 
@@ -23,9 +22,12 @@ export default function UserProfile() {
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
   useEffect(() => {
-    fetchProfile();
-  }, [])
+    if (user && user.id) {
+      fetchProfile();
+    }
 
+  }, [user])
+  
   const handleLogout = async () => {
     console.log("logout")
     Alert.alert(
@@ -55,7 +57,6 @@ export default function UserProfile() {
     );
   }
 
-  const displayUser = user
 
   const menuSections = [
     {
@@ -127,8 +128,8 @@ export default function UserProfile() {
             </TouchableOpacity>
           </View>
           
-          <Text style={styles.userName}>{displayUser?.fullName || "Name"}</Text>
-          <Text style={styles.userPhone}>{displayUser?.phoneNumber || "Phone number"}</Text>
+          <Text style={styles.userName}>{user?.fullName || "Name"}</Text>
+          <Text style={styles.userPhone}>{user?.phoneNumber || "Phone number"}</Text>
 
           <View style={styles.membershipBadge}>
             <Ionicons name="diamond" size={16} color="#F59E0B" />

@@ -25,7 +25,7 @@ export const useAuth = () => {
 
     const checkAuth = async () => {
         try {
-
+          
           const token = await AsyncStorage.getItem('token');
           const savedUser = await AsyncStorage.getItem('user');
       
@@ -75,11 +75,16 @@ export const useAuth = () => {
 
     const logout = async () => {
         try {
-            await AsyncStorage.removeItem("token");
-            await AsyncStorage.removeItem("user");
+            setLoading(true)
+            await AsyncStorage.multiRemove(["token", "user"]);
+            await AsyncStorage.clear();
+
             setUser(null);
+
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false)
         }
     };
     return { user, loading, login, register, logout, checkAuth, isInitialized, fetchProfile }; 
