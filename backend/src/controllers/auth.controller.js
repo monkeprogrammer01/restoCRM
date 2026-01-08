@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../lib/utils.js";
 
 export const signup = async(req, res) => {
-    const {fullName, phoneNumber, password} = req.body;
+    const {fullName, phoneNumber, password, role} = req.body;
 
     try {
         if (password.length < 8) {
@@ -24,7 +24,8 @@ export const signup = async(req, res) => {
         const newUser = new User({
             fullName: fullName,
             phoneNumber: phoneNumber,
-            password: hashedPassword
+            password: hashedPassword,
+            role: role
         })
         await newUser.save();
         const token = generateToken(newUser._id, res);

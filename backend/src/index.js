@@ -6,6 +6,7 @@ import connectDB from "./db.js"
 import orderRoute from "./routes/order.route.js"
 import reservationRoute from "./routes/reservation.route.js"
 import authRoute from "./routes/auth.route.js"
+import categoryRoute from "./routes/category.route.js"
 import { Server } from "socket.io"
 import http from "http"
 import { initSocket } from "./lib/socket.js"
@@ -24,6 +25,7 @@ swaggerDocs(app);
 app.use("/api/orders", orderRoute)
 app.use("/api/reservations", reservationRoute)
 app.use("/api/auth", authRoute)
+app.use("/api/categories", categoryRoute)
 app.get("/", (req, res) => {
     res.send("backend works")
 })

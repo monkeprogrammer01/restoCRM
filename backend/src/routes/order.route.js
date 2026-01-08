@@ -1,138 +1,121 @@
 import express from "express";
-import { 
-    createCategory, 
-    getCategories, 
-    getCategoryById, 
-    updateCategoryById, 
-    deleteCategoryById 
-} from "../controllers/category.controller.js";
+import { createOrder, deleteOrderById, getOrderById, getOrders, updateOrderById } from "../controllers/order.controller.js";
 import { authMiddleware, roleMiddleware } from "../lib/utils.js";
 
 const router = express.Router();
 
 /**
  * @openapi
- * /api/category:
- * get:
- * summary: Get all categories
- * tags:
- * - Categories
- * responses:
- * 200:
- * description: List of categories sorted by order
+ * /api/orders:
+ *   get:
+ *     summary: Get all orders
+ *     tags:
+ *       - Orders
+ *     responses:
+ *       200:
+ *         description: List of orders
  */
-router.get("/", getCategories);
+router.get("/", getOrders);
 
 /**
  * @openapi
- * /api/category/{id}:
- * get:
- * summary: Get category by ID
- * tags:
- * - Categories
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * description: Category found
- * 404:
- * description: Category not found
+ * /api/orders/{id}:
+ *   get:
+ *     summary: Get order by ID
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Order ID
+ *     responses:
+ *       200:
+ *         description: Order found
+ *       404:
+ *         description: Order not found
  */
-router.get("/:id", getCategoryById);
+router.get("/:id", getOrderById);
 
 /**
  * @openapi
- * /api/category:
- * post:
- * summary: Create a new category
- * tags:
- * - Categories
- * security:
- * - bearerAuth: []
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * required:
- * - name
- * properties:
- * name:
- * type: string
- * image:
- * type: string
- * order:
- * type: integer
- * responses:
- * 201:
- * description: Category created
- * 400:
- * description: Bad request (name missing)
+ * /api/orders:
+ *   post:
+ *     summary: Create a new order
+ *     tags:
+ *       - Orders
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Order created
  */
-router.post("/", authMiddleware, roleMiddleware(["admin", "staff"]), createCategory);
+router.post("/", authMiddleware, roleMiddleware(["staff", "client"]), createOrder);
 
 /**
  * @openapi
- * /api/category/{id}:
- * put:
- * summary: Update category by ID
- * tags:
- * - Categories
- * security:
- * - bearerAuth: []
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * name:
- * type: string
- * image:
- * type: string
- * order:
- * type: integer
- * responses:
- * 200:
- * description: Category updated
- * 404:
- * description: Category not found
+ * /api/orders/{id}:
+ *   put:
+ *     summary: Update order by ID
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Order ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Order updated
+ *       404:
+ *         description: Order not found
  */
-router.put("/:id", authMiddleware, roleMiddleware(["admin", "staff"]), updateCategoryById);
+router.put("/:id", updateOrderById);
 
 /**
  * @openapi
- * /api/category/{id}:
- * delete:
- * summary: Delete category by ID
- * tags:
- * - Categories
- * security:
- * - bearerAuth: []
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * description: Category deleted
- * 404:
- * description: Category not found
+ * /api/orders/{id}:
+ *   delete:
+ *     summary: Delete order by ID
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Order ID
+ *     responses:
+ *       200:
+ *         description: Order deleted
+ *       404:
+ *         description: Order not found
  */
-router.delete("/:id", authMiddleware, roleMiddleware(["admin", "staff"]), deleteCategoryById);
+router.delete("/:id", deleteOrderById);
 
 export default router;

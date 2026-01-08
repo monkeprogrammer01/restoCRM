@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-
+import User from "../models/auth.model.js";
 dotenv.config();
 export const generateToken = (userId, res) => {
     const token = jwt.sign({userId: userId}, process.env.JWT_SECRET, {
@@ -33,7 +33,7 @@ export const verifyToken = (token) => {
     }
 }
 
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
     try {
         let token = null;
         if (req.headers.authorization) {
@@ -44,15 +44,19 @@ export const authMiddleware = (req, res, next) => {
         if (!token) {
             return res.status(400).json({message: "Token Not Found"})
         }
-
         const result = verifyToken(token);
-
         if (!result.success) {
             return res.status(401).json({
                 message: "Invalid Token"
             })
         }
 
+        const user = await User.findById(result.userId)
+        if (!user) {
+            return res.status(404).json({message: "User not found"})
+        }
+        req.user = user;
+        console.log(user.role)
         req.userId = result.userId;
         next();
     } catch (error) {
@@ -61,6 +65,7 @@ export const authMiddleware = (req, res, next) => {
 }
 
 export const roleMiddleware = (roles) => (req, res, next) => {
+    
     if (!roles.includes(req.user.role)) {
         return res.status(403).json({message: "Access denied"});
     }
