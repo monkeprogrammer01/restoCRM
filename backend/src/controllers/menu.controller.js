@@ -1,5 +1,5 @@
-import Menu from '../models/menu.model'
-import Category from '../models/category.model';
+import Menu from '../models/menu.model.js'
+import Category from '../models/category.model.js';
 export const createMenu = async (req, res) => {
     try {
         const { name, description, price, category, image } = req.body;

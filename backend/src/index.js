@@ -7,6 +7,7 @@ import orderRoute from "./routes/order.route.js"
 import reservationRoute from "./routes/reservation.route.js"
 import authRoute from "./routes/auth.route.js"
 import categoryRoute from "./routes/category.route.js"
+import menuRoute from "./routes/menu.route.js"
 import { Server } from "socket.io"
 import http from "http"
 import { initSocket } from "./lib/socket.js"
@@ -26,6 +27,7 @@ app.use("/api/orders", orderRoute)
 app.use("/api/reservations", reservationRoute)
 app.use("/api/auth", authRoute)
 app.use("/api/categories", categoryRoute)
+app.use("/api/menu", menuRoute)
 app.get("/", (req, res) => {
     res.send("backend works")
 })
