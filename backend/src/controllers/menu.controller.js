@@ -58,3 +58,17 @@ export const updateMenuById = async (req, res) => {
         return res.status(500).json({message: "Internal server error"})
     }
 }
+
+export const deleteMenuById = async (req, res) => {
+    try {
+        const menuId = req.params.id;
+        const deletedMenu = await Menu.findByIdAndDelete(menuId);
+        if (!deletedMenu) {
+            return res.status(404).json({message: "Menu not found"})
+        }
+        return res.status(200).json({message: "Item deleted successfully", deletedMenu});
+    } catch (error) {
+        console.error("Error in deleteMenuById controller")
+        return res.status(500).json("Internal server error")
+    }
+}
