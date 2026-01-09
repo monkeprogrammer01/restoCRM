@@ -1,4 +1,5 @@
 import Category from "../models/category.model.js";
+import { cloudinary } from "../lib/cloudinary.js";
 
 export const createCategory = async (req, res) => {
     try {

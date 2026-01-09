@@ -1,8 +1,19 @@
 import Menu from '../models/menu.model.js'
 import Category from '../models/category.model.js';
+import { cloudinary } from '../lib/cloudinary.js';
+
 export const createMenu = async (req, res) => {
     try {
-        const { name, description, price, category, image } = req.body;
+        const { name, description, price, category } = req.body;
+        let imageUrl = ""
+        if (req.file) {
+            const b64 = Buffer.from(req.file.buffer).toString("base64");
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            const uploadRes = await cloudinary.uploader.upload(dataURI, {
+                folder: "menu_items"
+            })
+            imageUrl = uploadRes.secure_url;
+        }
         if (!name || !price) {
             return res.status(400).json({message: "Bad request"})
         }
@@ -11,7 +22,7 @@ export const createMenu = async (req, res) => {
             return res.status(400).json({message: "Category does not exist"})
         }
         const newMenu = await Menu.create({
-            name, description, price, category, image
+            name, description, price, category, image: imageUrl
         })
         const fullMenuInfo = await newMenu.populate("category", "name image"); 
         return res.status(201).json(fullMenuInfo);    } catch (error) {

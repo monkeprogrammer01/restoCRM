@@ -6,7 +6,7 @@ import {
     deleteMenuById 
 } from "../controllers/menu.controller.js";
 import { authMiddleware, roleMiddleware } from "../lib/utils.js";
-
+import { upload } from "../lib/cloudinary.js";
 const router = express.Router();
 
 /**
@@ -132,7 +132,7 @@ router.get("/", getAllMenu);
  *       403:
  *         description: Forbidden - requires admin or staff role
  */
-router.post("/", authMiddleware, roleMiddleware(["admin", "staff"]), createMenu);
+router.post("/", authMiddleware, roleMiddleware(["admin", "staff"]), upload.single("image"), createMenu);
 
 /**
  * @openapi
