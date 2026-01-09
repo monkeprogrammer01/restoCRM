@@ -11,7 +11,6 @@ class AuthService {
     }
 
     async register(user: RegistrationRequest): Promise<AuthResponse> {
-        console.log("fejk", user)
         const response = await api.post('/auth/signup', {
             fullName: user.fullName, phoneNumber: user.phoneNumber, password: user.password
         })
