@@ -12,11 +12,20 @@ const reservationSchema = new mongoose.Schema(
             ref: "Staff",
             required: true,
         },
+        customerName: {
+            type: String,
+            required: true
+        },
         customerNumber: {
             type: String,
             required: true,
             match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"],
             
+        },
+        guestCount: {
+            type: Number,
+            required: true,
+            min: 1
         },
         startTime: {
             type: Date,
@@ -25,6 +34,16 @@ const reservationSchema = new mongoose.Schema(
         endTime: {
             type: Date,
             required: true
+        },
+        status: {
+            type: String,
+            enum: ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"],
+            default: "PENDING"
+        },
+        orderId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order",
+            default: null
         }
 
     },
