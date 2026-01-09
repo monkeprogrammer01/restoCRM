@@ -24,11 +24,12 @@ const orderSchema = new mongoose.Schema(
         },
         items: [
             {
-                dishId: { type: mongoose.Schema.Types.ObjectId, ref: "Dish", required: true },
+                dishId: { type: mongoose.Schema.Types.ObjectId, ref: "Menu", required: true },
                 quantity: {type: Number, required: true, min: 1},
                 price: {type:Number, required: true}
             }
-        ] 
+        ],
+        notes: { types: String }
     },
     { timestamps: true }
 )

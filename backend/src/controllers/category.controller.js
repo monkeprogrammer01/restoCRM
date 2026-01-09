@@ -1,13 +1,22 @@
 import Category from "../models/category.model.js";
-import { cloudinary } from "../lib/cloudinary.js";
+import { cloudinary, upload } from "../lib/cloudinary.js";
+ 
+// TO-DO: update category, menu schemas and controllers to delete images from cloudinary when delete request makes
 
 export const createCategory = async (req, res) => {
     try {
-        const { name, image, order } = req.body;
-
+        const { name, order } = req.body;
+        let imageUrl = "";
         if (!name) return res.status(400).json({message: "Bad request"});
-
-        const newCategory = await Category.create({name, image, order});
+        if (req.file) {
+            const b64 = Buffer.from(req.file.buffer).toString("base64");
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            const uploadRes = await cloudinary.uploader.upload(dataURI, {
+                folder: "categories"
+            })
+            imageUrl = uploadRes.secure_url;
+        }
+        const newCategory = await Category.create({name, imageUrl, order});
         return res.status(201).json({message: "New category created.", newCategory})
     } catch (error) {
         console.error("Error in createCategory controller");
@@ -41,8 +50,19 @@ export const getCategoryById = async (req, res) => {
 
 export const updateCategoryById = async (req, res) => {
     try {
-        const categoryId = req.params.id
-        const updatedCategory = await Category.findByIdAndUpdate(categoryId, req.body, {
+        const categoryId = req.params.id;
+        const updateData = { ...req.body }
+
+        if (req.file) {
+            const b64 = Buffer.from(req.file.buffer).toString("base64");
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`
+            const uploadRes = await cloudinary.uploader.upload(dataURI, {
+                folder: "categories"
+            })
+            updateData.imageUrl = uploadRes.secure_url;
+        }
+
+        const updatedCategory = await Category.findByIdAndUpdate(categoryId, updateData, {
             new: true, runValidators: true
         })
         if (!updatedCategory) {
