@@ -4,6 +4,7 @@ import { Dish } from "@/types/menu.types";
 class MenuService {
     async getDishes(): Promise<Dish[]> {
         const response = await api.get("/menu");
+        console.log("rr", response)
         return response.data
     }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,14 +17,16 @@ import { useMenu } from '@/hooks/useMenu';
 export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('Все');
   const [searchQuery, setSearchQuery] = useState('');
-  const {dishes, loading} = useMenu();
-
+  const {fetchDishes, dishes, loading} = useMenu();
   const filteredDishes = dishes.filter(dish => {
     const matchesCategory = activeCategory === 'Все' || dish.category === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
+  useEffect(() => {
+    fetchDishes();
+}, [fetchDishes]);
   const categories = [
     { id: '1', name: 'Все', icon: 'apps', iconLib: 'Ionicons' },
     { id: '2', name: 'Горячее', icon: 'food-drumstick', iconLib: 'MaterialCommunityIcons' },
