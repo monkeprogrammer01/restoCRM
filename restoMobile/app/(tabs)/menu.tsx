@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -17,11 +18,20 @@ export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('Все');
   const [searchQuery, setSearchQuery] = useState('');
   const {dishes, loading} = useMenu();
+
   const filteredDishes = dishes.filter(dish => {
     const matchesCategory = activeCategory === 'Все' || dish.category === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const categories = [
+    { id: '1', name: 'Все', icon: 'apps', iconLib: 'Ionicons' },
+    { id: '2', name: 'Горячее', icon: 'food-drumstick', iconLib: 'MaterialCommunityIcons' },
+    { id: '3', name: 'Салаты', icon: 'leaf', iconLib: 'Ionicons' },
+    { id: '4', name: 'Десерты', icon: 'ice-cream', iconLib: 'Ionicons' },
+    { id: '5', name: 'Напитки', icon: 'cup', iconLib: 'MaterialCommunityIcons' },
+  ];
 
   const popularDishes = dishes.filter(dish => dish.popular);
 
@@ -164,14 +174,11 @@ export default function Menu() {
                 style={styles.dishCard}
                 activeOpacity={0.8}
               >
-                <View style={styles.dishImageContainer}>
-                  {renderIcon(dish.iconLib, dish.icon, 40, '#EA580C')}
-                  {dish.popular && (
-                    <View style={styles.popularBadge}>
-                      <Ionicons name="flame" size={12} color="#FFFFFF" />
-                    </View>
-                  )}
-                </View>
+            <Image 
+              source={{ uri: dish.image }} 
+              style={styles.dishImageContainer} 
+              resizeMode="cover"
+            />
 
                 <View style={styles.dishInfo}>
                   <Text style={styles.dishName} numberOfLines={1}>

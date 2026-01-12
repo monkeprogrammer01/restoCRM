@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { menuService } from "@/services/menu.service";
 import { Dish } from "@/types/menu.types";
-export const useMenu = async () => {
+export const useMenu = () => {
     const [loading, setLoading] = useState(false);
     const [dishes, setDishes] = useState<Dish[]>([]);
     const fetchDishes = async () => {
