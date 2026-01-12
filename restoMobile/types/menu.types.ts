@@ -2,8 +2,9 @@ export interface Dish {
     _id: string;
     name: string;
     price: number;
-    icon: string;
-    iconLib: string;
+    image: string;
+    icon?: string;
+    iconLib?: string;
     category: string;
     rating: number;
     description: string;

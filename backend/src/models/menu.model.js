@@ -22,7 +22,11 @@ const menuSchema = mongoose.Schema(
             required: true
         },
         image: {type: String},
-        isAvailable: {type: Boolean, default: true}
+        isAvailable: {type: Boolean, default: true},
+        rating: { type: Number, default: 5 },
+        prepTime: { type: String, default: "15 мин" },
+        calories: { type: Number, default: 0 },
+        popular: { type: Boolean, default: false }
     }, {timestamps: true}
 )
 
