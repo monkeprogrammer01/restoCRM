@@ -31,5 +31,5 @@ export const useMenu = async () => {
         }
     }
 
-    return {fetchDishes, dishes, loading}
+    return {fetchDishes, dishes, loading, fetchDishesByCategory}
 }
