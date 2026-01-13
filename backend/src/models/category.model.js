@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const categorySchema = mongoose.Schema(
     {
+        slug: { type: String, required: true },
         name: { type: String, required: true },
         image: { type: String },
         order: { type: Number, default: 0 }

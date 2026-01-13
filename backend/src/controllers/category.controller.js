@@ -29,7 +29,7 @@ export const getCategories = async (req, res) => {
         const allCategories = await Category.find().sort({order: 1}).select("-__v").lean();
         return res.status(200).json(allCategories)        
     } catch (error) {
-        console.error("Error in getCategories");
+        console.error("Error in getCategories", error);
         return res.status(500).json({message: "Internal server error"})
     }
 
