@@ -20,6 +20,9 @@ const router = express.Router();
  *         _id:
  *           type: string
  *           description: Category ID
+ *         slug:
+ *           type: string
+ *           description: Category slug
  *         name:
  *           type: string
  *           description: Category name
@@ -118,11 +121,22 @@ router.get("/:id", getCategoryById);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - slug
+ *               - name
+ *               - icon
+ *               - iconLib
  *             properties:
+ *               slug:
+ *                 type: string
  *               name:
  *                 type: string
- *               image:
+ *               icon:
  *                  type: string
+ *               iconLib:
+ *                  type: string
+ *               order:
+ *                  type: number
  *     responses:
  *       201:
  *         description: Order created

@@ -19,7 +19,7 @@ export const createCategory = async (req, res) => {
         const newCategory = await Category.create({name, imageUrl, order});
         return res.status(201).json({message: "New category created.", newCategory})
     } catch (error) {
-        console.error("Error in createCategory controller");
+        console.error("Error in createCategory controller", error);
         return res.status(500).json({message: "Internal server error"})
     }
 }
