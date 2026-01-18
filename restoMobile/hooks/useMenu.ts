@@ -31,7 +31,7 @@ export const useMenu = () => {
         }
     }
 
-    const fetchCategories = async () => {
+    const fetchCategories = useCallback(async () => {
         try {
             setLoading(true);
             const response = await menuService.getCategories();
@@ -42,7 +42,7 @@ export const useMenu = () => {
         } finally {
             setLoading(false)
         }
-    }
+    }, [])
 
     return {fetchDishes, dishes, loading, fetchDishesByCategory, fetchCategories, categories}
 }

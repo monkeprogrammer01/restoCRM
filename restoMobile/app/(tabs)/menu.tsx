@@ -17,7 +17,7 @@ import { useMenu } from '@/hooks/useMenu';
 export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('Все');
   const [searchQuery, setSearchQuery] = useState('');
-  const {fetchDishes, dishes, loading} = useMenu();
+  const {fetchDishes, dishes, loading, fetchCategories, categories} = useMenu();
   const filteredDishes = dishes.filter(dish => {
     const matchesCategory = activeCategory === 'Все' || dish.category === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -25,15 +25,14 @@ export default function Menu() {
   });
 
   useEffect(() => {
-    fetchDishes();
-}, [fetchDishes]);
-  const categories = [
-    { id: '1', name: 'Все', icon: 'apps', iconLib: 'Ionicons' },
-    { id: '2', name: 'Горячее', icon: 'food-drumstick', iconLib: 'MaterialCommunityIcons' },
-    { id: '3', name: 'Салаты', icon: 'leaf', iconLib: 'Ionicons' },
-    { id: '4', name: 'Десерты', icon: 'ice-cream', iconLib: 'Ionicons' },
-    { id: '5', name: 'Напитки', icon: 'cup', iconLib: 'MaterialCommunityIcons' },
-  ];
+    const loadData = async () => {
+      await Promise.all([
+        fetchCategories(),
+        fetchDishes()
+      ])
+    }
+    loadData();
+}, [fetchDishes, fetchCategories]);
 
   const popularDishes = dishes.filter(dish => dish.popular);
 
@@ -94,7 +93,7 @@ export default function Menu() {
         >
           {categories.map((category) => (
             <TouchableOpacity
-              key={category.id}
+              key={category._id}
               onPress={() => setActiveCategory(category.name)}
               style={[
                 styles.categoryButton,
