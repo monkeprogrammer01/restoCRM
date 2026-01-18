@@ -1,10 +1,9 @@
 import { api } from "@/api/client";
-import { Dish } from "@/types/menu.types";
+import { Dish, Category } from "@/types/menu.types";
 
 class MenuService {
     async getDishes(): Promise<Dish[]> {
         const response = await api.get("/menu");
-        console.log("rr", response)
         return response.data
     }
 
@@ -12,5 +11,10 @@ class MenuService {
         const response = await api.get(`/menu`, {params: { category }})
         return response.data;
     } 
+
+    async getCategories(): Promise<Category[]> {
+        const response = await api.get('/categories');
+        return response.data;
+    }
 }
 export const menuService = new MenuService();

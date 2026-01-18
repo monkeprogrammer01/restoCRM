@@ -1,19 +1,17 @@
 import { useState, useCallback } from "react"
 import { menuService } from "@/services/menu.service";
-import { Dish } from "@/types/menu.types";
+import { Category, Dish } from "@/types/menu.types";
 export const useMenu = () => {
     const [loading, setLoading] = useState(false);
     const [dishes, setDishes] = useState<Dish[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const fetchDishes = useCallback(async () => {
         try {
             setLoading(true)
-            console.log("request poshel")
             const response = await menuService.getDishes();
-            console.log("request over")
             setDishes(response);
         } catch (error) {
             console.error("Error in fetchDishes", error)
-
             throw error
         } finally {
             setLoading(false)
@@ -33,5 +31,18 @@ export const useMenu = () => {
         }
     }
 
-    return {fetchDishes, dishes, loading, fetchDishesByCategory}
+    const fetchCategories = async () => {
+        try {
+            setLoading(true);
+            const response = await menuService.getCategories();
+            console.log(response)
+            setCategories(response);
+        } catch (error) {
+            console.log("Error in fetchCategories (useMenu).", error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return {fetchDishes, dishes, loading, fetchDishesByCategory, fetchCategories, categories}
 }

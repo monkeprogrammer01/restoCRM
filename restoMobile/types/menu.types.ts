@@ -12,3 +12,12 @@ export interface Dish {
     prepTime: string;
     popular?: boolean;
 }
+
+export interface Category {
+    _id: string,
+    slug: string,
+    name: string,
+    icon?: string,
+    iconLib?: string,
+    order: number
+}
