@@ -5,7 +5,7 @@ import { cloudinary, upload } from "../lib/cloudinary.js";
 
 export const createCategory = async (req, res) => {
     try {
-        const { name, order } = req.body;
+        const { slug, name, icon, iconLib, order } = req.body;
         let imageUrl = "";
         if (!name) return res.status(400).json({message: "Bad request"});
         if (req.file) {
@@ -16,7 +16,7 @@ export const createCategory = async (req, res) => {
             })
             imageUrl = uploadRes.secure_url;
         }
-        const newCategory = await Category.create({name, imageUrl, order});
+        const newCategory = await Category.create({slug, name, icon, iconLib, order});
         return res.status(201).json({message: "New category created.", newCategory})
     } catch (error) {
         console.error("Error in createCategory controller", error);
