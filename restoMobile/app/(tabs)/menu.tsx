@@ -15,11 +15,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { Dish } from '@/types/menu.types';
 import { useMenu } from '@/hooks/useMenu';
 export default function Menu() {
-  const [activeCategory, setActiveCategory] = useState('Все');
-  const [searchQuery, setSearchQuery] = useState('');
   const {fetchDishes, dishes, loading, fetchCategories, categories} = useMenu();
+
+  const categoriesWithAll = [
+    { _id: 'all', name: 'Все', icon: 'apps', iconLib: 'Ionicons' },
+    ...categories
+  ];
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const filteredDishes = dishes.filter(dish => {
-    const matchesCategory = activeCategory === 'Все' || dish.category === activeCategory;
+    const matchesCategory = activeCategory === 'all' || dish.category === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -137,7 +142,7 @@ export default function Menu() {
             >
               {popularDishes.map((dish) => (
                 <TouchableOpacity
-                  key={dish.id}
+                  key={dish._id}
                   style={styles.popularCard}
                   activeOpacity={0.8}
                 >
@@ -171,7 +176,7 @@ export default function Menu() {
           <View style={styles.dishesGrid}>
             {filteredDishes.map((dish) => (
               <TouchableOpacity
-                key={dish.id}
+                key={dish._id}
                 style={styles.dishCard}
                 activeOpacity={0.8}
               >
