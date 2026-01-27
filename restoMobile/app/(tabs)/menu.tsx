@@ -24,7 +24,8 @@ export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const filteredDishes = dishes.filter(dish => {
-    const matchesCategory = activeCategory === 'all' || dish.category === activeCategory;
+    console.log(dish.category)
+    const matchesCategory = activeCategory === 'all' || dish.category._id === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -96,30 +97,30 @@ export default function Menu() {
           style={styles.categoriesContainer}
           contentContainerStyle={styles.categoriesContent}
         >
-          {categories.map((category) => (
+          {categoriesWithAll.map((category) => (
             <TouchableOpacity
               key={category._id}
-              onPress={() => setActiveCategory(category.name)}
+              onPress={() => setActiveCategory(category._id)}
               style={[
                 styles.categoryButton,
-                activeCategory === category.name && styles.categoryButtonActive
+                activeCategory === category._id && styles.categoryButtonActive
               ]}
             >
               <View style={[
                 styles.categoryIconContainer,
-                activeCategory === category.name && styles.categoryIconContainerActive
+                activeCategory === category._id && styles.categoryIconContainerActive
               ]}>
                 {renderIcon(
                   category.iconLib,
                   category.icon,
                   20,
-                  activeCategory === category.name ? '#EA580C' : '#6B7280'
+                  activeCategory === category._id ? '#EA580C' : '#6B7280'
                 )}
               </View>
               <Text
                 style={[
                   styles.categoryText,
-                  activeCategory === category.name && styles.categoryTextActive
+                  activeCategory === category._id && styles.categoryTextActive
                 ]}
               >
                 {category.name}
@@ -128,8 +129,7 @@ export default function Menu() {
           ))}
         </ScrollView>
 
-        {/* Popular Dishes */}
-        {activeCategory === 'Все' && searchQuery === '' && (
+        {activeCategory === 'all' && searchQuery === '' && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Популярные блюда</Text>
@@ -171,7 +171,7 @@ export default function Menu() {
         {/* All Dishes */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {activeCategory === 'Все' ? 'Все блюда' : activeCategory}
+            {activeCategory === 'all' ? 'Все блюда' : categoriesWithAll.find(cat => cat._id === activeCategory)?.name || activeCategory}
           </Text>
           <View style={styles.dishesGrid}>
             {filteredDishes.map((dish) => (
@@ -181,7 +181,7 @@ export default function Menu() {
                 activeOpacity={0.8}
               >
             <Image 
-              source={{ uri: dish.image }} 
+              source={{ uri: dish.icon }} 
               style={styles.dishImageContainer} 
               resizeMode="cover"
             />
