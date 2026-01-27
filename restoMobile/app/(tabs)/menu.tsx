@@ -7,7 +7,8 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -54,6 +55,16 @@ export default function Menu() {
         return null;
     }
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#EA580C" />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
