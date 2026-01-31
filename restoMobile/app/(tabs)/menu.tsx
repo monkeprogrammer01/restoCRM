@@ -25,7 +25,6 @@ export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const filteredDishes = dishes.filter(dish => {
-    console.log(dish.category)
     const matchesCategory = activeCategory === 'all' || dish.category._id === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
