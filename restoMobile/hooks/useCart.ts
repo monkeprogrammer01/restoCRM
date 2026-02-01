@@ -85,8 +85,11 @@ export const useCart = () => {
         
     }
 
-    
+    const getTotal = async () => {
+        return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    return { addToCart, removeFromCart, updateQuantity, cartItems, loading, clearCart }
+    }
+
+    return { addToCart, removeFromCart, updateQuantity, cartItems, loading, clearCart, getTotal }
 
 }

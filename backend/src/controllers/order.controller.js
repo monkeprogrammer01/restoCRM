@@ -1,11 +1,11 @@
 import Order from "../models/order.model.js";
 import Notification from "../models/notification.model.js";
 import { getIO } from "../lib/socket.js";
-
+import Menu from "../models/menu.model.js"
 // CREATE
 export const createOrder = async (req, res) => {
   try {
-    const { tableId, userId, status, items, addressId, paymentMethod, paymentStatus } = req.body;
+    const { orderType, tableId, userId, status, items, addressId, paymentMethod, paymentStatus } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({message: "Order must have at least one item"})
@@ -26,16 +26,20 @@ export const createOrder = async (req, res) => {
     })) 
 
     const newOrder = await Order.create({
+      orderType,
       tableId,
       userId,
       status,
+      addressId,
+      paymentMethod,
+      paymentStatus,
       addressId,
       total_check: calculatedTotal,
       items: itemsWithDetails,
     });
 
     const newNotification = await Notification.create({
-      userId: staffId,
+      userId: userId,
       type: "ORDER",
       message: `New order created: #${newOrder._id.toString().slice(-4)} created for ${tableId}`,
     });
@@ -43,7 +47,7 @@ export const createOrder = async (req, res) => {
     console.log(newNotification.message);
 
     const io = getIO();
-    io.to(staffId.toString()).emit("newNotification", newNotification);
+    io.to(userId.toString()).emit("newNotification", newNotification);
 
     return res.status(201).json(newOrder);
   } catch (error) {

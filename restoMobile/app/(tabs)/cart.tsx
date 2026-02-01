@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { useCart } from '@/hooks/useCart';
 
 interface CartItem {
   id: number;
@@ -22,35 +23,8 @@ interface CartItem {
 }
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: 'Стейк Рибай',
-      price: 4500,
-      icon: 'food-steak',
-      iconLib: 'MaterialCommunityIcons',
-      quantity: 1,
-      description: 'Сочный стейк из мраморной говядины'
-    },
-    {
-      id: 2,
-      name: 'Паста Карбонара',
-      price: 2800,
-      icon: 'pasta',
-      iconLib: 'MaterialCommunityIcons',
-      quantity: 2,
-      description: 'Классическая итальянская паста'
-    },
-    {
-      id: 3,
-      name: 'Капучино',
-      price: 800,
-      icon: 'coffee',
-      iconLib: 'FontAwesome5',
-      quantity: 1,
-      description: 'Ароматный итальянский кофе'
-    },
-  ]);
+
+  const { addToCart, removeFromCart, updateQuantity, cartItems, loading, clearCart, getTotal } = useCart();
 
   const [promoCode, setPromoCode] = useState('');
   const deliveryFee = 500;
@@ -66,31 +40,6 @@ export default function Cart() {
       default:
         return null;
     }
-  };
-
-  const updateQuantity = (id: number, change: number) => {
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(0, item.quantity + change) }
-          : item
-      ).filter(item => item.quantity > 0)
-    );
-  };
-
-  const removeItem = (id: number) => {
-    Alert.alert(
-      'Удалить товар',
-      'Вы уверены, что хотите удалить этот товар из корзины?',
-      [
-        { text: 'Отмена', style: 'cancel' },
-        {
-          text: 'Удалить',
-          style: 'destructive',
-          onPress: () => setCartItems(prevItems => prevItems.filter(item => item.id !== id))
-        }
-      ]
-    );
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -141,7 +90,7 @@ export default function Cart() {
                   <View style={styles.itemActions}>
                     <TouchableOpacity
                       style={styles.removeButton}
-                      onPress={() => removeItem(item.id)}
+                      onPress={() => removeFromCart(item.dishId)}
                     >
                       <Ionicons name="trash-outline" size={18} color="#EF4444" />
                     </TouchableOpacity>
@@ -149,7 +98,7 @@ export default function Cart() {
                     <View style={styles.quantityContainer}>
                       <TouchableOpacity
                         style={styles.quantityButton}
-                        onPress={() => updateQuantity(item.id, -1)}
+                        onPress={() => updateQuantity(item.dishId, -1)}
                       >
                         <Ionicons name="remove" size={18} color="#6B7280" />
                       </TouchableOpacity>

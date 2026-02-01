@@ -13,6 +13,7 @@ import http from "http"
 import { initSocket } from "./lib/socket.js"
 import cookieParser from "cookie-parser"
 import { swaggerDocs } from "../swagger.js"
+import addressRoute from "./routes/address.route.js"
 dotenv.config()
 connectDB();
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/reservations", reservationRoute)
 app.use("/api/auth", authRoute)
 app.use("/api/categories", categoryRoute)
 app.use("/api/menu", menuRoute)
+app.use("/api/address", addressRoute)
 app.get("/", (req, res) => {
     res.send("backend works")
 })

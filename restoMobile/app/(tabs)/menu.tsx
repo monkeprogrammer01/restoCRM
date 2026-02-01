@@ -15,6 +15,7 @@ import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-ico
 import { useAuth } from '@/hooks/useAuth';
 import { Dish } from '@/types/menu.types';
 import { useMenu } from '@/hooks/useMenu';
+import { useCart } from '@/hooks/useCart';
 export default function Menu() {
   const {fetchDishes, dishes, loading, fetchCategories, categories} = useMenu();
 
@@ -24,6 +25,7 @@ export default function Menu() {
   ];
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const { addToCart } = useCart();
   const filteredDishes = dishes.filter(dish => {
     const matchesCategory = activeCategory === 'all' || dish.category._id === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -169,7 +171,14 @@ export default function Menu() {
                     </View>
                     <Text style={styles.popularPrice}>{dish.price}₸</Text>
                   </View>
-                  <TouchableOpacity style={styles.popularAddButton}>
+                  <TouchableOpacity style={styles.popularAddButton} onPress={() => addToCart(
+                    dish._id,
+                    dish.name,
+                    dish.price,
+                    dish.icon,
+                    dish.iconLib,
+                    1
+                  )} >
                     <Ionicons name="add" size={20} color="#FFFFFF" />
                   </TouchableOpacity>
                 </TouchableOpacity>
@@ -224,7 +233,14 @@ export default function Menu() {
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.dishAddButton}>
+                <TouchableOpacity style={styles.dishAddButton} onPress={() => addToCart(
+                  dish._id,
+                  dish.name,
+                  dish.price,
+                  dish.icon,
+                  dish.iconLib,
+                  1
+                )}>
                   <Ionicons name="add" size={24} color="#FFFFFF" />
                 </TouchableOpacity>
               </TouchableOpacity>
