@@ -42,6 +42,7 @@ export const useCart = () => {
 
     const removeFromCart = async (dishId: string) => {
         try {
+            setLoading(true);
             const updatedCart = cartItems.filter(item=> item.dishId!==dishId);
             setCartItems(updatedCart);
             await AsyncStorage.setItem("cart_items", JSON.stringify(updatedCart))
@@ -54,8 +55,23 @@ export const useCart = () => {
 
     }
 
-    const updateQuantity = async (dishId: string) => {
-        
+    const updateQuantity = async (dishId: string, newQuantity: number) => {
+        try {
+            setLoading(true)
+            if (newQuantity === 0) {
+                await removeFromCart(dishId);
+                return;
+            }
+
+            const updatedCart = cartItems.map(item => item.dishId === dishId ? {...item, quantity: newQuantity} : item)
+            setCartItems(updatedCart)
+            await AsyncStorage.setItem("cart_items", JSON.stringify(updatedCart))
+        } catch (error) {
+            throw error;
+        } finally {
+            setLoading(false)
+        }
     }
+    return { addToCart, removeFromCart, updateQuantity }
 
 }
