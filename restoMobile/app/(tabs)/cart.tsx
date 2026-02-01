@@ -76,14 +76,13 @@ export default function Cart() {
             {/* Cart Items */}
             <View style={styles.itemsContainer}>
               {cartItems.map((item) => (
-                <View key={item.id} style={styles.cartItem}>
+                <View key={item.dishId} style={styles.cartItem}>
                   <View style={styles.itemImageContainer}>
                     {renderIcon(item.iconLib, item.icon, 40, '#EA580C')}
                   </View>
 
                   <View style={styles.itemInfo}>
                     <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.itemDescription}>{item.description}</Text>
                     <Text style={styles.itemPrice}>{item.price}₸</Text>
                   </View>
 
@@ -98,7 +97,7 @@ export default function Cart() {
                     <View style={styles.quantityContainer}>
                       <TouchableOpacity
                         style={styles.quantityButton}
-                        onPress={() => updateQuantity(item.dishId, -1)}
+                        onPress={() => updateQuantity(item.dishId, item.quantity-1)}
                       >
                         <Ionicons name="remove" size={18} color="#6B7280" />
                       </TouchableOpacity>
@@ -107,7 +106,7 @@ export default function Cart() {
 
                       <TouchableOpacity
                         style={styles.quantityButton}
-                        onPress={() => updateQuantity(item.id, 1)}
+                        onPress={() => updateQuantity(item.dishId, item.quantity+1)}
                       >
                         <Ionicons name="add" size={18} color="#6B7280" />
                       </TouchableOpacity>
