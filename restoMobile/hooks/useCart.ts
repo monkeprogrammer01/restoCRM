@@ -72,6 +72,21 @@ export const useCart = () => {
             setLoading(false)
         }
     }
-    return { addToCart, removeFromCart, updateQuantity }
+    const clearCart = async () => {
+        try {
+            setLoading(true);
+            setCartItems([])   
+            await AsyncStorage.removeItem("cart_items") 
+        } catch (error) {
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+        
+    }
+
+    
+
+    return { addToCart, removeFromCart, updateQuantity, cartItems, loading, clearCart }
 
 }
