@@ -20,9 +20,42 @@ export const useCart = () => {
     }, [])
 
     const addToCart = async (dishId: string, name: string, price: number, icon: string, iconLib: string, quantity: number) => {
-        setLoading(true);
-        
+        try {
+            setLoading(true);
+            const existingItem = cartItems.find(item => item.dishId === dishId);
+            let updatedCart;
+            if (existingItem) {
+                updatedCart = cartItems.map(item => item.dishId === dishId ? {...item, quantity: item.quantity + quantity} : item)
+            } else {
+                updatedCart = [ ...cartItems, {dishId, name, price, icon, iconLib, quantity}]
+            }
+            setCartItems(updatedCart);
+            await AsyncStorage.setItem("cart_items", JSON.stringify(updatedCart))
+        } catch (error) {
+            throw error; 
+        } finally {
+            setLoading(false);
+        }
 
+
+    }
+
+    const removeFromCart = async (dishId: string) => {
+        try {
+            const updatedCart = cartItems.filter(item=> item.dishId!==dishId);
+            setCartItems(updatedCart);
+            await AsyncStorage.setItem("cart_items", JSON.stringify(updatedCart))
+
+        } catch (error) {
+            throw error
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
+    const updateQuantity = async (dishId: string) => {
+        
     }
 
 }

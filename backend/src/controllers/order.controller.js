@@ -5,7 +5,7 @@ import { getIO } from "../lib/socket.js";
 // CREATE
 export const createOrder = async (req, res) => {
   try {
-    const { tableId, staffId, status, items } = req.body;
+    const { tableId, userId, status, items, addressId, paymentMethod, paymentStatus } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({message: "Order must have at least one item"})
@@ -27,8 +27,9 @@ export const createOrder = async (req, res) => {
 
     const newOrder = await Order.create({
       tableId,
-      staffId,
+      userId,
       status,
+      addressId,
       total_check: calculatedTotal,
       items: itemsWithDetails,
     });
