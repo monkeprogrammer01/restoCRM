@@ -1,16 +1,23 @@
-import { useCart } from "@/hooks/useCart"
-import { CartItem } from "@/types/cart.types";
-import { createContext } from "react";
+import { useCart } from "@/hooks/useCart.js"
+import { CartItem } from "@/types/cart.types.js";
+import { createContext, ReactNode, useContext } from "react";
 
-interface CartContextType {
-    cartItems: CartItem[];
-    addToCart: (dishId: string, name: string, price: number, icon: string, iconLib: string, quantity: number) => void; 
-    removeFromCart: (dishId: string) => void;
-    updateQuantity: (dishId: string, count: number) => void
-}
-
+type CartContextType = ReturnType<typeof useCart>
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = async () => {
-    
+export const CartProvider = ( {children}: {children: ReactNode} ) => {
+    const cart = useCart();
+    return (
+        <CartContext.Provider value={cart}>
+            {children}
+        </CartContext.Provider>
+    )
+}
+
+export const useCartContext = () => {
+    const context = useContext(CartContext);
+    if (!context) {
+        throw new Error('useCartContext must be used within CartProvider');
+    }
+    return context;
 }
