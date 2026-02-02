@@ -1,4 +1,4 @@
-import { useCart } from "@/hooks/useCart.js"
+import { useCart } from "@/hooks/useCart"
 import { CartItem } from "@/types/cart.types.js";
 import { createContext, ReactNode, useContext } from "react";
 

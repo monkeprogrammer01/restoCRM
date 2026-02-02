@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useCart } from '@/hooks/useCart';
+import { useCartContext } from '@/contexts/CartContext';
 
 interface CartItem {
   id: number;
@@ -24,7 +25,7 @@ interface CartItem {
 
 export default function Cart() {
 
-  const { addToCart, removeFromCart, updateQuantity, cartItems, loading, clearCart, getTotal } = useCart();
+  const { addToCart, removeFromCart, updateQuantity, cartItems, loading, clearCart, getTotal } = useCartContext();
 
   const [promoCode, setPromoCode] = useState('');
   const deliveryFee = 500;

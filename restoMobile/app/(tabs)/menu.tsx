@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
+import { useCartContext } from '@/contexts/CartContext';
 import { Dish } from '@/types/menu.types';
 import { useMenu } from '@/hooks/useMenu';
 import { useCart } from '@/hooks/useCart';
@@ -25,7 +26,7 @@ export default function Menu() {
   ];
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const { addToCart } = useCart();
+  const { addToCart } = useCartContext();
   const filteredDishes = dishes.filter(dish => {
     const matchesCategory = activeCategory === 'all' || dish.category._id === activeCategory;
     const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
