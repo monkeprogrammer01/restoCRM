@@ -1,4 +1,4 @@
 export const API_CONFIG = {
-    BASE_URL: "http://10.48.138.204:5001/api",
+    BASE_URL: "http://192.168.0.88:5001/api",
     TIMEOUT: 10000
 }

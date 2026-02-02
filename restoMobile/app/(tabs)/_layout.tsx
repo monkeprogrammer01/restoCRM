@@ -1,7 +1,9 @@
+import { useCartContext } from '@/contexts/CartContext';
 import { Tabs } from 'expo-router';
 import { Home, Utensils, ShoppingBag, User } from 'lucide-react-native';
 import { View, StyleSheet } from 'react-native';
 export default function TabLayout() {
+  const { cartItems } = useCartContext();
   return (
     <Tabs
       screenOptions={{
@@ -57,7 +59,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
-          tabBarBadge: 3,
+          tabBarBadge: cartItems.length >= 1 ? cartItems.length : undefined,
           tabBarBadgeStyle: { backgroundColor: '#f97316' },
           tabBarIcon: ({ focused }) => (
             <View style={[styles.iconContainer, focused && styles.iconContainerFocused]}>

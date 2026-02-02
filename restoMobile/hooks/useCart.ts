@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const useCart = () => {
     const [loading, setLoading] = useState(false);
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
     useEffect(() => {
         const loadCart = async () => {
             try {
