@@ -1,9 +1,11 @@
 import { CartItem } from "@/types/cart.types";
 import { useState, useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAddresses } from "./useAddresses";
 export const useCart = () => {
     const [loading, setLoading] = useState(false);
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const {addresses, addAddress} = useAddresses();
     useEffect(() => {
         const loadCart = async () => {
             try {

@@ -20,6 +20,7 @@ import {
 } from "@expo/vector-icons";
 import { useCart } from "@/hooks/useCart";
 import { useCartContext } from "@/contexts/CartContext";
+import { useAddresses } from "@/hooks/useAddresses";
 
 export default function Cart() {
   const {
@@ -31,6 +32,7 @@ export default function Cart() {
     clearCart,
     getTotal,
   } = useCartContext();
+  const {addresses, addAddress} = useAddresses();
 
   const [promoCode, setPromoCode] = useState("");
   const deliveryFee = 500;
@@ -39,7 +41,7 @@ export default function Cart() {
   const [addressForm, setAddressForm] = useState({
     city: "",
     street: "",
-    house: "",
+    building: "",
     apartment: "",
     entrance: "",
     floor: "",
@@ -263,9 +265,9 @@ export default function Cart() {
               <TextInput
                 style={styles.input}
                 placeholder="Напр. Алматы"
-                value={addressForm.street}
+                value={addressForm.city}
                 onChangeText={(text) =>
-                  setAddressForm({ ...addressForm, street: text })
+                  setAddressForm({ ...addressForm, city: text })
                 }
               />
               
@@ -286,9 +288,9 @@ export default function Cart() {
                   <TextInput
                     style={styles.input}
                     placeholder="12А"
-                    value={addressForm.house}
+                    value={addressForm.building}
                     onChangeText={(text) =>
-                      setAddressForm({ ...addressForm, house: text })
+                      setAddressForm({ ...addressForm, building: text })
                     }
                   />
                 </View>
@@ -307,9 +309,18 @@ export default function Cart() {
 
               <TouchableOpacity
                 style={styles.saveAddressButton}
-                onPress={() => {
-                  console.log(addressForm);
-                  setModalVisible(false);
+                onPress={async () => {
+                  try {
+                    const result = await addAddress(addressForm.city, addressForm.street, addressForm.building, addressForm.apartment)
+                    if (result) {
+                      setModalVisible(false);
+                      setAddressForm({ city: '', street: '', building: '', apartment: '', entrance: '', floor: '' });
+                    }
+                  } catch (error) {
+                    throw error
+                  } finally {
+                    setModalVisible(false);
+                  }
                 }}
               >
                 <Text style={styles.saveAddressButtonText}>
