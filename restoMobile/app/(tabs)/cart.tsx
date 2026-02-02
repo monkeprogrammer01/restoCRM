@@ -37,6 +37,7 @@ export default function Cart() {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [addressForm, setAddressForm] = useState({
+    city: "",
     street: "",
     house: "",
     apartment: "",
@@ -257,7 +258,19 @@ export default function Cart() {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
+            <Text style={styles.inputLabel}>Город</Text>
+              
+              <TextInput
+                style={styles.input}
+                placeholder="Напр. Алматы"
+                value={addressForm.street}
+                onChangeText={(text) =>
+                  setAddressForm({ ...addressForm, street: text })
+                }
+              />
+              
               <Text style={styles.inputLabel}>Улица</Text>
+              
               <TextInput
                 style={styles.input}
                 placeholder="Напр. пр. Абая"
