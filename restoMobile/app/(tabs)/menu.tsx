@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,50 +8,63 @@ import {
   StyleSheet,
   TextInput,
   Image,
-  ActivityIndicator
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { useAuth } from '@/hooks/useAuth';
-import { useCartContext } from '@/contexts/CartContext';
-import { Dish } from '@/types/menu.types';
-import { useMenu } from '@/hooks/useMenu';
-import { useCart } from '@/hooks/useCart';
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  FontAwesome5,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
+import { useAuth } from "@/hooks/useAuth";
+import { useCartContext } from "@/contexts/CartContext";
+import { Dish } from "@/types/menu.types";
+import { useMenu } from "@/hooks/useMenu";
+import { useCart } from "@/hooks/useCart";
+import FloatingCart from "@/components/FloatingCart";
 export default function Menu() {
-  const {fetchDishes, dishes, loading, fetchCategories, categories} = useMenu();
+  const { fetchDishes, dishes, loading, fetchCategories, categories } =
+    useMenu();
 
   const categoriesWithAll = [
-    { _id: 'all', name: 'Все', icon: 'apps', iconLib: 'Ionicons' },
-    ...categories
+    { _id: "all", name: "Все", icon: "apps", iconLib: "Ionicons" },
+    ...categories,
   ];
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const { addToCart } = useCartContext();
-  const filteredDishes = dishes.filter(dish => {
-    const matchesCategory = activeCategory === 'all' || dish.category._id === activeCategory;
-    const matchesSearch = dish.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const { addToCart, cartItems, updateQuantity } = useCartContext();
+  const filteredDishes = dishes.filter((dish) => {
+    const matchesCategory =
+      activeCategory === "all" || dish.category._id === activeCategory;
+    const matchesSearch = dish.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   useEffect(() => {
     const loadData = async () => {
-      await Promise.all([
-        fetchCategories(),
-        fetchDishes()
-      ])
-    }
+      await Promise.all([fetchCategories(), fetchDishes()]);
+    };
     loadData();
-}, [fetchDishes, fetchCategories]);
+  }, [fetchDishes, fetchCategories]);
 
-  const popularDishes = dishes.filter(dish => dish.popular);
+  const popularDishes = dishes.filter((dish) => dish.popular);
 
-  const renderIcon = (iconLib: string, iconName: string, size: number, color: string) => {
-    switch(iconLib) {
-      case 'FontAwesome5':
+  const renderIcon = (
+    iconLib: string,
+    iconName: string,
+    size: number,
+    color: string
+  ) => {
+    switch (iconLib) {
+      case "FontAwesome5":
         return <FontAwesome5 name={iconName} size={size} color={color} />;
-      case 'MaterialCommunityIcons':
-        return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
-      case 'Ionicons':
+      case "MaterialCommunityIcons":
+        return (
+          <MaterialCommunityIcons name={iconName} size={size} color={color} />
+        );
+      case "Ionicons":
         return <Ionicons name={iconName} size={size} color={color} />;
       default:
         return null;
@@ -61,7 +74,9 @@ export default function Menu() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <ActivityIndicator size="large" color="#EA580C" />
         </View>
       </SafeAreaView>
@@ -71,13 +86,15 @@ export default function Menu() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFBEB" />
-      
+
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <View>
             <Text style={styles.headerTitle}>Меню</Text>
-            <Text style={styles.headerSubtitle}>{filteredDishes.length} блюд</Text>
+            <Text style={styles.headerSubtitle}>
+              {filteredDishes.length} блюд
+            </Text>
           </View>
           <TouchableOpacity style={styles.filterButton}>
             <Ionicons name="options-outline" size={24} color="#EA580C" />
@@ -95,17 +112,20 @@ export default function Menu() {
             onChangeText={setSearchQuery}
           />
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
               <Ionicons name="close-circle" size={20} color="#9CA3AF" />
             </TouchableOpacity>
           )}
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Categories */}
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.categoriesContainer}
           contentContainerStyle={styles.categoriesContent}
@@ -116,24 +136,27 @@ export default function Menu() {
               onPress={() => setActiveCategory(category._id)}
               style={[
                 styles.categoryButton,
-                activeCategory === category._id && styles.categoryButtonActive
+                activeCategory === category._id && styles.categoryButtonActive,
               ]}
             >
-              <View style={[
-                styles.categoryIconContainer,
-                activeCategory === category._id && styles.categoryIconContainerActive
-              ]}>
+              <View
+                style={[
+                  styles.categoryIconContainer,
+                  activeCategory === category._id &&
+                    styles.categoryIconContainerActive,
+                ]}
+              >
                 {renderIcon(
                   category.iconLib,
                   category.icon,
                   20,
-                  activeCategory === category._id ? '#EA580C' : '#6B7280'
+                  activeCategory === category._id ? "#EA580C" : "#6B7280"
                 )}
               </View>
               <Text
                 style={[
                   styles.categoryText,
-                  activeCategory === category._id && styles.categoryTextActive
+                  activeCategory === category._id && styles.categoryTextActive,
                 ]}
               >
                 {category.name}
@@ -142,7 +165,7 @@ export default function Menu() {
           ))}
         </ScrollView>
 
-        {activeCategory === 'all' && searchQuery === '' && (
+        {activeCategory === "all" && searchQuery === "" && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Популярные блюда</Text>
@@ -160,7 +183,7 @@ export default function Menu() {
                   activeOpacity={0.8}
                 >
                   <View style={styles.popularImageContainer}>
-                    {renderIcon(dish.iconLib, dish.icon, 40, '#EA580C')}
+                    {renderIcon(dish.iconLib, dish.icon, 40, "#EA580C")}
                   </View>
                   <View style={styles.popularInfo}>
                     <Text style={styles.popularName} numberOfLines={1}>
@@ -168,18 +191,25 @@ export default function Menu() {
                     </Text>
                     <View style={styles.popularRating}>
                       <Ionicons name="star" size={14} color="#F59E0B" />
-                      <Text style={styles.popularRatingText}>{dish.rating}</Text>
+                      <Text style={styles.popularRatingText}>
+                        {dish.rating}
+                      </Text>
                     </View>
                     <Text style={styles.popularPrice}>{dish.price}₸</Text>
                   </View>
-                  <TouchableOpacity style={styles.popularAddButton} onPress={() => addToCart(
-                    dish._id,
-                    dish.name,
-                    dish.price,
-                    dish.icon,
-                    dish.iconLib,
-                    1
-                  )} >
+                  <TouchableOpacity
+                    style={styles.popularAddButton}
+                    onPress={() =>
+                      addToCart(
+                        dish._id,
+                        dish.name,
+                        dish.price,
+                        dish.icon,
+                        dish.iconLib,
+                        1
+                      )
+                    }
+                  >
                     <Ionicons name="add" size={20} color="#FFFFFF" />
                   </TouchableOpacity>
                 </TouchableOpacity>
@@ -191,7 +221,10 @@ export default function Menu() {
         {/* All Dishes */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {activeCategory === 'all' ? 'Все блюда' : categoriesWithAll.find(cat => cat._id === activeCategory)?.name || activeCategory}
+            {activeCategory === "all"
+              ? "Все блюда"
+              : categoriesWithAll.find((cat) => cat._id === activeCategory)
+                  ?.name || activeCategory}
           </Text>
           <View style={styles.dishesGrid}>
             {filteredDishes.map((dish) => (
@@ -200,11 +233,11 @@ export default function Menu() {
                 style={styles.dishCard}
                 activeOpacity={0.8}
               >
-            <Image 
-              source={{ uri: dish.icon }} 
-              style={styles.dishImageContainer} 
-              resizeMode="cover"
-            />
+                <Image
+                  source={{ uri: dish.icon }}
+                  style={styles.dishImageContainer}
+                  resizeMode="cover"
+                />
 
                 <View style={styles.dishInfo}>
                   <Text style={styles.dishName} numberOfLines={1}>
@@ -220,8 +253,14 @@ export default function Menu() {
                       <Text style={styles.dishMetaText}>{dish.prepTime}</Text>
                     </View>
                     <View style={styles.dishMetaItem}>
-                      <Ionicons name="flame-outline" size={14} color="#6B7280" />
-                      <Text style={styles.dishMetaText}>{dish.calories} ккал</Text>
+                      <Ionicons
+                        name="flame-outline"
+                        size={14}
+                        color="#6B7280"
+                      />
+                      <Text style={styles.dishMetaText}>
+                        {dish.calories} ккал
+                      </Text>
                     </View>
                   </View>
 
@@ -234,21 +273,62 @@ export default function Menu() {
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.dishAddButton} onPress={() => addToCart(
-                  dish._id,
-                  dish.name,
-                  dish.price,
-                  dish.icon,
-                  dish.iconLib,
-                  1
-                )}>
-                  <Ionicons name="add" size={24} color="#FFFFFF" />
-                </TouchableOpacity>
+                {(() => {
+                  const inCart = cartItems.find(
+                    (item) => item.dishId === dish._id
+                  );
+                  const quantity = inCart ? inCart.quantity : 0;
+
+                  if (quantity > 0) {
+                    return (
+                      <View style={styles.quantityContainer}>
+                        <TouchableOpacity
+                          onPress={() => updateQuantity(dish._id, quantity - 1)}
+                        >
+                          <Ionicons
+                            name="remove-circle"
+                            size={30}
+                            color="#EA580C"
+                          />
+                        </TouchableOpacity>
+
+                        <Text style={styles.quantityTextMenu}>{quantity}</Text>
+
+                        <TouchableOpacity
+                          onPress={() => updateQuantity(dish._id, quantity + 1)}
+                        >
+                          <Ionicons
+                            name="add-circle"
+                            size={30}
+                            color="#EA580C"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  }
+
+                  return (
+                    <TouchableOpacity
+                      style={styles.dishAddButton}
+                      onPress={() =>
+                        addToCart(
+                          dish._id,
+                          dish.name,
+                          dish.price,
+                          dish.icon,
+                          dish.iconLib,
+                          1
+                        )
+                      }
+                    >
+                      <Ionicons name="add" size={24} color="#FFFFFF" />
+                    </TouchableOpacity>
+                  );
+                })()}
               </TouchableOpacity>
             ))}
           </View>
         </View>
-
         <View style={styles.bottomSpace} />
       </ScrollView>
     </SafeAreaView>
@@ -258,49 +338,49 @@ export default function Menu() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: "#FFFBEB",
   },
   header: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 20,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
   },
   headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontWeight: "bold",
+    color: "#111827",
   },
   headerSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginTop: 4,
   },
   filterButton: {
     width: 44,
     height: 44,
-    backgroundColor: '#FED7AA',
+    backgroundColor: "#FED7AA",
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F3F4F6",
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -309,7 +389,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#111827',
+    color: "#111827",
   },
   scrollView: {
     flex: 1,
@@ -322,7 +402,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   categoryButton: {
-    alignItems: 'center',
+    alignItems: "center",
     gap: 8,
   },
   categoryButtonActive: {},
@@ -330,35 +410,35 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 16,
-    backgroundColor: '#F3F4F6',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#F3F4F6",
+    alignItems: "center",
+    justifyContent: "center",
   },
   categoryIconContainerActive: {
-    backgroundColor: '#FED7AA',
+    backgroundColor: "#FED7AA",
   },
   categoryText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontWeight: "600",
+    color: "#6B7280",
   },
   categoryTextActive: {
-    color: '#EA580C',
+    color: "#EA580C",
   },
   section: {
     marginTop: 24,
     paddingHorizontal: 24,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontWeight: "bold",
+    color: "#111827",
     marginBottom: 16,
   },
   popularContent: {
@@ -366,22 +446,22 @@ const styles = StyleSheet.create({
   },
   popularCard: {
     width: 160,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
   },
   popularImageContainer: {
-    width: '100%',
+    width: "100%",
     height: 100,
-    backgroundColor: '#FED7AA',
+    backgroundColor: "#FED7AA",
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 12,
   },
   popularInfo: {
@@ -389,46 +469,46 @@ const styles = StyleSheet.create({
   },
   popularName: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontWeight: "bold",
+    color: "#111827",
   },
   popularRating: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   popularRatingText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontWeight: "600",
+    color: "#6B7280",
   },
   popularPrice: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#EA580C',
+    fontWeight: "bold",
+    color: "#EA580C",
     marginTop: 4,
   },
   popularAddButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 12,
     right: 12,
     width: 36,
     height: 36,
-    backgroundColor: '#EA580C',
+    backgroundColor: "#EA580C",
     borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dishesGrid: {
     gap: 16,
   },
   dishCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 16,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
@@ -437,82 +517,101 @@ const styles = StyleSheet.create({
   dishImageContainer: {
     width: 90,
     height: 90,
-    backgroundColor: '#FED7AA',
+    backgroundColor: "#FED7AA",
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
   },
   popularBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: 8,
     right: 8,
     width: 24,
     height: 24,
-    backgroundColor: '#EA580C',
+    backgroundColor: "#EA580C",
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dishInfo: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   dishName: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontWeight: "bold",
+    color: "#111827",
   },
   dishDescription: {
     fontSize: 13,
-    color: '#6B7280',
+    color: "#6B7280",
     marginTop: 2,
   },
   dishMeta: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
     marginTop: 4,
   },
   dishMetaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   dishMetaText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   dishFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 4,
   },
   dishRating: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   dishRatingText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontWeight: "600",
+    color: "#6B7280",
   },
   dishPrice: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#EA580C',
+    fontWeight: "bold",
+    color: "#EA580C",
   },
   dishAddButton: {
     width: 40,
     height: 40,
-    backgroundColor: '#EA580C',
+    backgroundColor: "#EA580C",
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-end",
   },
   bottomSpace: {
     height: 100,
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 12,
+    padding: 4,
+  },
+  quantityButton: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quantityTextMenu: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#111827',
+    minWidth: 20,
+    textAlign: 'center',
   },
 });
